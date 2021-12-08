@@ -1,12 +1,12 @@
-# pytop
-```
+pytop
+=====
 This is a Python based "top" like tool for linux with historical graphing for processes. 
 
 Allows you to select individual processes and receive a histogram of the CPU usage for that process.
 
-Example output
---------------
+![Alt text](screenshot.png?raw=true "")
 
+```
 CPU UsrTime   SysTime     Idle   IoWait     Ireq  SoftIrq
   0    0.78%    0.00%   86.82%    0.00%    0.00%   12.40%
   1    2.52%    0.00%   97.48%    0.00%    0.00%    0.00%
