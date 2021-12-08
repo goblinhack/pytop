@@ -892,7 +892,7 @@ class Main(object):
         arger.add_argument("-i", "--ignore", type=int, default=3,
                 help="filter idle processes after x seconds of inaction")
 
-        arger.add_argument("-d", "--delay", type=float, default=0.1,
+        arger.add_argument("-d", "--delay", type=float, default=1,
                 help="delay between system samples")
 
         arger.add_argument("-a", "--all", action="count", default=0,
