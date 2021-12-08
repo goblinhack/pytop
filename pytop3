@@ -506,7 +506,7 @@ class Main(object):
 
             if not self.opts.no_color:
                 if self.opts.pid == pid:
-                    sys.stdout.write("%s%-22s%s %-3d " % (colors.bg.purple, name, colors.reset, process_curr_stats.cpu))
+                    sys.stdout.write("%s%-22s%s %-3d  " % (colors.bg.purple, name, colors.reset, process_curr_stats.cpu))
                     self.found_user_selected_process = True
                 else:
                     print(("%-22s %-3d " % (name, process_curr_stats.cpu)), end=' ')
