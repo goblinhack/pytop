@@ -309,14 +309,18 @@ class Main(object):
                 else:
                     sys.stdout.write(" ")
 
-                print("tCPU %d->%d" % (thread_last_stats.cpu, thread_curr_stats.cpu))
+                print("CPU %d->%d" % (thread_last_stats.cpu, thread_curr_stats.cpu))
                 sys.stdout.write("%s" % (colors.reset))
 
                 thread_last_stats.cpu_switch = True
                 thread_curr_stats.cpu_switch = True
-
             else:
-                print
+                if not self.opts.no_color:
+                    sys.stdout.write(" %s" % (colors.fg.green))
+                else:
+                    sys.stdout.write(" ")
+                print("CPU %d" % thread_curr_stats.cpu)
+                sys.stdout.write("%s" % (colors.reset))
 
             self.how_many_printed_lines += 1
             if self.how_many_printed_lines >= self.lines:
@@ -589,7 +593,13 @@ class Main(object):
                 process_last_stats.cpu_switch = True
                 process_curr_stats.cpu_switch = True
             else:
-                print
+                if not self.opts.no_color:
+                    sys.stdout.write(" %s" % (colors.fg.green))
+                else:
+                    sys.stdout.write(" ")
+
+                print("CPU %d" % process_curr_stats.cpu)
+                sys.stdout.write("%s" % (colors.reset))
 
             if not self.opts.no_color:
                 sys.stdout.write("%s" % (colors.reset))
