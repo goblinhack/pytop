@@ -11,7 +11,7 @@
 #   -i IGNORE, --ignore IGNORE
 #                         filter idle processes after x seconds of inaction
 #   -d DELAY, --delay DELAY
-#                         delay between system sampes
+#                         delay between system samples
 #   -a, --all             include all processes, including idle ones
 #   -c, --no-color        disable color output
 #   -H, --no-histogram    disable histogram
@@ -898,7 +898,7 @@ class Main(object):
                 help="filter idle processes after x seconds of inaction")
 
         arger.add_argument("-d", "--delay", type=float, default=0.5,
-                help="delay between system sampes")
+                help="delay between system samples")
 
         arger.add_argument("-a", "--all", action="count", default=0,
                 help="include all processes, including idle ones")
