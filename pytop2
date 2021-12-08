@@ -1,8 +1,8 @@
 #!/usr/bin/env python2
 #
-# yatop
+# pytop2
 #
-# usage: yatop [-h] [-p PID] [-one] [-i IGNORE] [-d DELAY] [-a] [-c] [-H]
+# usage: pytop2 [-h] [-p PID] [-one] [-i IGNORE] [-d DELAY] [-a] [-c] [-H]
 #
 # optional arguments:
 #   -h, --help            show this help message and exit
@@ -842,7 +842,7 @@ class Main(object):
 
         sys.stdout.write("%s" % (colors.reset))
 
-        print(" yatop, yet another top: use j,k,up/down to select processes, q to quit")
+        print(" pytop2, yet another top: use j,k,up/down to select processes, q to quit")
 
     #
     # Handle user input

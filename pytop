@@ -35,18 +35,18 @@
 #   6    9.91%    1.80%   88.29%    0.00%    0.00%    0.00%
 #   7    5.13%    0.85%   94.02%    0.00%    0.00%    0.00%
 #   8    3.42%    0.85%   95.73%    0.00%    0.00%    0.00%
-# PID  State     Process name       CPU     USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs
-# 913      S /usr/bin/kvm -smbios   11    204.24%    0.00%   204.24%   195.97%   226.17%    4.82%    2.60%    4.84% CPU 5->6
-# 58       S (ksoftirqd/10)         10      0.00%    0.00%     0.00%     0.00%     0.89%    0.00%    0.00%    0.00%
-# 78       S (ksoftirqd/14)         14      0.00%    0.00%     0.00%     0.00%     0.86%    0.00%    0.00%    0.00%
-# 118      S (ksoftirqd/22)         22      0.00%    0.00%     0.00%     0.00%     0.85%    0.00%    0.00%    0.00%
-# 144      S (ksmd)                 2       0.00%    0.00%     0.00%     0.00%     2.56%    0.00%    0.00%    0.00% CPU 6->2
-# 790      S rsyslogd -c5           10      0.00%    0.89%     0.89%     0.00%     0.90%    0.00%    0.00%    0.00%
-# 3616     S bash -ls               5       0.00%    0.00%     0.00%     0.00%     0.88%    0.00%    0.00%    0.00% CPU 6->5
-# 6888     S /usr/bin/ssh-agent     8       0.00%    0.00%     0.00%     0.00%     0.91%    0.00%    0.00%    0.00%
-# 7154     S /usr/bin/kvm -smbios   3     134.19%   11.11%   145.30%   139.67%   160.87%    3.22%    1.62%    3.48% CPU 7->3
-# \_ 7157  S (kvm)                  7       2.48%    0.83%     3.31%     0.00%     8.55%    0.16%    0.00%    0.24% tCPU 3->7
-# \_ 7158  S (kvm)                  11      5.04%    0.00%     5.04%     0.82%    14.16%    0.24%    0.00%    0.28%
+# PID  State     Process name         USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs
+# 913      S /usr/bin/kvm -smbios   204.24%    0.00%   204.24%   195.97%   226.17%    4.82%    2.60%    4.84% CPU 5->6
+# 58       S (ksoftirqd/10)           0.00%    0.00%     0.00%     0.00%     0.89%    0.00%    0.00%    0.00%
+# 78       S (ksoftirqd/14)           0.00%    0.00%     0.00%     0.00%     0.86%    0.00%    0.00%    0.00%
+# 118      S (ksoftirqd/22)           0.00%    0.00%     0.00%     0.00%     0.85%    0.00%    0.00%    0.00%
+# 144      S (ksmd)                   0.00%    0.00%     0.00%     0.00%     2.56%    0.00%    0.00%    0.00% CPU 6->2
+# 790      S rsyslogd -c5             0.00%    0.89%     0.89%     0.00%     0.90%    0.00%    0.00%    0.00%
+# 3616     S bash -ls                 0.00%    0.00%     0.00%     0.00%     0.88%    0.00%    0.00%    0.00% CPU 6->5
+# 6888     S /usr/bin/ssh-agent       0.00%    0.00%     0.00%     0.00%     0.91%    0.00%    0.00%    0.00%
+# 7154     S /usr/bin/kvm -smbios   134.19%   11.11%   145.30%   139.67%   160.87%    3.22%    1.62%    3.48% CPU 7->3
+# \_ 7157  S (kvm)                    2.48%    0.83%     3.31%     0.00%     8.55%    0.16%    0.00%    0.24% tCPU 3->7
+# \_ 7158  S (kvm)                    5.04%    0.00%     5.04%     0.82%    14.16%    0.24%    0.00%    0.28%
 # vvv Maximum CPU seen for pid 913, 226.17%:
 # 226.17 %__________________________________________#_____________________________________________________
 # 225.01 %__________________________________________#_____________________________________________________
@@ -228,16 +228,16 @@ class Main(object):
 
             if not self.opts.no_color:
                 if self.opts.pid == int(thread_last_stats.pid):
-                    print(("%s%-22s%s %-3d " % (colors.bg.purple, thread_last_stats.name, colors.reset, thread_curr_stats.cpu)), end=' ')
+                    print(("%s%-22s%s" % (colors.bg.purple, thread_last_stats.name, colors.reset)), end=' ')
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s %-3d " % (thread_last_stats.name, thread_curr_stats.cpu)), end=' ')
+                    print(("%-22s" % (thread_last_stats.name)), end=' ')
             else:
                 if self.opts.pid == int(thread_last_stats.pid):
-                    print(("%s%-22s%s %-3d " % (colors.reverse, thread_last_stats.name, colors.reset, thread_curr_stats.cpu)), end=' ')
+                    print(("%s%-22s%s" % (colors.reverse, thread_last_stats.name, colors.reset)), end=' ')
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s %-3d " % (thread_last_stats.name, thread_curr_stats.cpu)), end=' ')
+                    print(("%-22s" % (thread_last_stats.name)), end=' ')
 
             if not self.opts.no_color:
                 if utime > 90:
@@ -309,7 +309,7 @@ class Main(object):
                 else:
                     sys.stdout.write(" ")
 
-                print(("CPU %d->%d" % (thread_last_stats.cpu, thread_curr_stats.cpu)))
+                print(("%d->%d" % (thread_last_stats.cpu, thread_curr_stats.cpu)))
                 sys.stdout.write("%s" % (colors.reset))
 
                 thread_last_stats.cpu_switch = True
@@ -319,7 +319,7 @@ class Main(object):
                     sys.stdout.write(" %s" % (colors.fg.green))
                 else:
                     sys.stdout.write(" ")
-                print(("CPU %d" % thread_curr_stats.cpu))
+                print(("%d" % thread_curr_stats.cpu))
                 sys.stdout.write("%s" % (colors.reset))
 
             self.how_many_printed_lines += 1
@@ -336,7 +336,7 @@ class Main(object):
         else:
             sys.stdout.write("%s" % (colors.reverse))
 
-        print("PID  State     Process name       CPU     USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs")
+        print("PID  State     Process name            USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs")
         sys.stdout.write("%s" % (colors.reset))
 
         self.found_user_selected_process = False
@@ -506,16 +506,16 @@ class Main(object):
 
             if not self.opts.no_color:
                 if self.opts.pid == pid:
-                    sys.stdout.write("%s%-22s%s %-3d  " % (colors.bg.purple, name, colors.reset, process_curr_stats.cpu))
+                    sys.stdout.write("%s%-22s%s " % (colors.bg.purple, name, colors.reset))
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s %-3d " % (name, process_curr_stats.cpu)), end=' ')
+                    print(("%-22s" % (name)), end=' ')
             else:
                 if self.opts.pid == pid:
-                    sys.stdout.write("%s%-22s%s %-3d  " % (colors.reverse, name, colors.reset, process_curr_stats.cpu))
+                    sys.stdout.write("%s%-22s%s " % (colors.reverse, name, colors.reset))
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s %-3d " % (name, process_curr_stats.cpu)), end=' ')
+                    print(("%-22s" % (name)), end=' ')
 
             if not self.opts.no_color:
                 if utime > 90:
@@ -587,7 +587,7 @@ class Main(object):
                 else:
                     sys.stdout.write(" ")
 
-                print(("CPU %d->%d " % (process_last_stats.cpu, process_curr_stats.cpu)))
+                print(("%d->%d " % (process_last_stats.cpu, process_curr_stats.cpu)))
                 sys.stdout.write("%s" % (colors.reset))
 
                 process_last_stats.cpu_switch = True
@@ -598,7 +598,7 @@ class Main(object):
                 else:
                     sys.stdout.write(" ")
 
-                print(("CPU %d" % process_curr_stats.cpu))
+                print(("%d" % process_curr_stats.cpu))
                 sys.stdout.write("%s" % (colors.reset))
 
             if not self.opts.no_color:
@@ -629,7 +629,7 @@ class Main(object):
         else:
             sys.stdout.write("%s" % (colors.reverse))
 
-        print("CPU UsrTime   SysTime     Idle   IoWait     Ireq  SoftIrq")
+        print("CPU UsrTime  SysTime   Idle   IoWait     Ireq  SoftIrq")
 
         sys.stdout.write("%s" % (colors.reset))
 
@@ -667,11 +667,6 @@ class Main(object):
                 else:
                     # If did nothing for 10 seconds, ignore
                     c1.did_something = self.opts.ignore
-
-            #
-            # Print the overal stats for this cpu
-            #
-            sys.stdout.write("%3d" % (cpu))
 
             if not self.opts.no_color:
                 if utime > 90:
