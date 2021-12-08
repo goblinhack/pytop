@@ -2,13 +2,13 @@ pytop
 =====
 This is a Python based "top" like tool for linux with historical graphing for processes.
 
+- Python 3 version: pytop
 - Python 2 version: pytop2
-- Python 3 version: pytop3
 
 Allows you to select individual processes (j/k) and receive a histogram of the CPU usage for that process.
 
 ```bash
-usage: pytop2 [-h] [-p PID] [-one] [-i IGNORE] [-d DELAY] [-a] [-c] [-H]
+usage: pytop [-h] [-p PID] [-one] [-i IGNORE] [-d DELAY] [-a] [-c] [-H]
 
 optional arguments:
   -h, --help            show this help message and exit
