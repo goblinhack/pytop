@@ -85,8 +85,8 @@ import select
 import tty
 import termios
 
-class Main(object):
 
+class Main(object):
     #
     # display the difference between two snapshots in time for a pids threads
     #
@@ -128,16 +128,16 @@ class Main(object):
             curr_stats_clock = curr_stats.cpuinfo[thread_last_stats.cpu].clock
             total_clock = float(curr_stats_clock - last_stats_clock)
 
-            utime = (((float(utime)) / total_clock) * 100.0)
-            stime = (((float(stime)) / total_clock) * 100.0)
-            cpu_pct = (((float(delta)) / total_clock) * 100.0)
+            utime = ((float(utime)) / total_clock) * 100.0
+            stime = ((float(stime)) / total_clock) * 100.0
+            cpu_pct = ((float(delta)) / total_clock) * 100.0
 
             #
             # Calculate the min and max CPU ranges we see
             #
-            if thread_last_stats.cpu_min_pct == None:
+            if thread_last_stats.cpu_min_pct is None:
                 thread_last_stats.cpu_min_pct = cpu_pct
-            if thread_last_stats.cpu_max_pct == None:
+            if thread_last_stats.cpu_max_pct is None:
                 thread_last_stats.cpu_max_pct = cpu_pct
 
             min_cpu_pct = thread_last_stats.cpu_min_pct
@@ -160,7 +160,7 @@ class Main(object):
             delta = clock1 - clock0
 
             if delta != 0:
-                iowait_pct = (float(delta) / float(self.ticks * self.opts.delay))
+                iowait_pct = float(delta) / float(self.ticks * self.opts.delay)
 
                 if (iowait_pct < 0) or (iowait_pct > 100):
                     #
@@ -173,9 +173,9 @@ class Main(object):
                     #
                     # Calculate the min and max blk ranges we see
                     #
-                    if thread_last_stats.iowait_min_pct == None:
+                    if thread_last_stats.iowait_min_pct is None:
                         thread_last_stats.iowait_min_pct = iowait_pct
-                    if thread_last_stats.iowait_max_pct == None:
+                    if thread_last_stats.iowait_max_pct is None:
                         thread_last_stats.iowait_max_pct = iowait_pct
 
                     min_iowait_pct = thread_last_stats.iowait_min_pct
@@ -202,7 +202,9 @@ class Main(object):
                 thread_curr_stats.did_something = thread_last_stats.did_something
                 if not self.opts.all:
                     if (cpu_pct == 0) and (iowait_pct == 0):
-                        thread_curr_stats.did_something = thread_curr_stats.did_something - 1
+                        thread_curr_stats.did_something = (
+                            thread_curr_stats.did_something - 1
+                        )
                         if thread_curr_stats.did_something <= 0:
                             thread_curr_stats.did_something = 0
                             continue
@@ -215,91 +217,165 @@ class Main(object):
             #
             # Print the overal stats for this thread
             #
-            print(("\\_ %-5s " % (thread_last_stats.pid)), end=' ')
+            print(("\\_ %-5s " % (thread_last_stats.pid)), end=" ")
             curr_stats.pids_and_tids.append(thread_last_stats.pid)
 
             if not self.opts.no_color:
                 if thread_last_stats.state == "D":
-                    sys.stdout.write("%s%s%s " % (colors.fg.red, thread_last_stats.state, colors.reset))
+                    sys.stdout.write(
+                        "%s%s%s "
+                        % (colors.fg.red, thread_last_stats.state, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%s%s " % (colors.fg.green, thread_last_stats.state, colors.reset))
+                    sys.stdout.write(
+                        "%s%s%s "
+                        % (colors.fg.green, thread_last_stats.state, colors.reset)
+                    )
             else:
                 sys.stdout.write("%s " % (thread_last_stats.state))
 
             if not self.opts.no_color:
                 if self.opts.pid == int(thread_last_stats.pid):
-                    print(("%s%-22s%s" % (colors.bg.purple, thread_last_stats.name, colors.reset)), end=' ')
+                    print(
+                        (
+                            "%s%-22s%s"
+                            % (colors.bg.purple, thread_last_stats.name, colors.reset)
+                        ),
+                        end=" ",
+                    )
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s" % (thread_last_stats.name)), end=' ')
+                    print(("%-22s" % (thread_last_stats.name)), end=" ")
             else:
                 if self.opts.pid == int(thread_last_stats.pid):
-                    print(("%s%-22s%s" % (colors.reverse, thread_last_stats.name, colors.reset)), end=' ')
+                    print(
+                        (
+                            "%s%-22s%s"
+                            % (colors.reverse, thread_last_stats.name, colors.reset)
+                        ),
+                        end=" ",
+                    )
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s" % (thread_last_stats.name)), end=' ')
+                    print(("%-22s" % (thread_last_stats.name)), end=" ")
 
             if not self.opts.no_color:
                 if utime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (utime))
 
             if not self.opts.no_color:
                 if stime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (stime))
 
             if not self.opts.no_color:
                 if cpu_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, cpu_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s" % (colors.fg.red, cpu_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, cpu_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s" % (colors.fg.green, cpu_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (cpu_pct))
 
             if not self.opts.no_color:
                 if thread_curr_stats.cpu_min_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, thread_curr_stats.cpu_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.red, thread_curr_stats.cpu_min_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, thread_curr_stats.cpu_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.green, thread_curr_stats.cpu_min_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (thread_curr_stats.cpu_min_pct))
 
             if not self.opts.no_color:
                 if thread_curr_stats.cpu_max_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, thread_curr_stats.cpu_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.red, thread_curr_stats.cpu_max_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, thread_curr_stats.cpu_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.green, thread_curr_stats.cpu_max_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (thread_curr_stats.cpu_max_pct))
 
             if not self.opts.no_color:
                 if iowait_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, iowait_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, iowait_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, iowait_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, iowait_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (iowait_pct))
 
             if not self.opts.no_color:
                 if thread_curr_stats.iowait_min_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, thread_curr_stats.iowait_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.red,
+                            thread_curr_stats.iowait_min_pct,
+                            colors.reset,
+                        )
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, thread_curr_stats.iowait_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            thread_curr_stats.iowait_min_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (thread_curr_stats.iowait_min_pct))
 
             if not self.opts.no_color:
                 if thread_curr_stats.iowait_max_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, thread_curr_stats.iowait_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.red,
+                            thread_curr_stats.iowait_max_pct,
+                            colors.reset,
+                        )
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, thread_curr_stats.iowait_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            thread_curr_stats.iowait_max_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (thread_curr_stats.iowait_max_pct))
 
@@ -336,7 +412,9 @@ class Main(object):
         else:
             sys.stdout.write("%s" % (colors.reverse))
 
-        print("PID  State     Process name            USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs")
+        print(
+            "PID  State     Process name            USER%  SYSTEM%      Cpu%   CpuMin%   CpuMax%  IOWait%   IoMin%   IoMax% CPUs"
+        )
         sys.stdout.write("%s" % (colors.reset))
 
         self.found_user_selected_process = False
@@ -359,13 +437,13 @@ class Main(object):
             # Filter to a process?
             #
             if not self.all_pids:
-                if self.opts.pid != None:
+                if self.opts.pid is not None:
                     if self.opts.pid != pid:
                         ok = False
                         for tid in process_last_stats.threads:
                             if self.opts.pid == int(tid):
                                 ok = True
-                        if ok == False:
+                        if not ok:
                             continue
 
             #
@@ -383,16 +461,16 @@ class Main(object):
             total_clock = float(curr_stats_clock - last_stats_clock)
 
             if total_clock != 0:
-                utime = (((float(utime)) / total_clock) * 100.0)
-                stime = (((float(stime)) / total_clock) * 100.0)
-                cpu_pct = (((float(delta)) / total_clock) * 100.0)
+                utime = ((float(utime)) / total_clock) * 100.0
+                stime = ((float(stime)) / total_clock) * 100.0
+                cpu_pct = ((float(delta)) / total_clock) * 100.0
 
                 #
                 # Calculate the min and max CPU ranges we see
                 #
-                if process_last_stats.cpu_min_pct == None:
+                if process_last_stats.cpu_min_pct is None:
                     process_last_stats.cpu_min_pct = cpu_pct
-                if process_last_stats.cpu_max_pct == None:
+                if process_last_stats.cpu_max_pct is None:
                     process_last_stats.cpu_max_pct = cpu_pct
 
                 min_cpu_pct = process_last_stats.cpu_min_pct
@@ -422,7 +500,7 @@ class Main(object):
             delta = clock1 - clock0
 
             if delta != 0:
-                iowait_pct = (float(delta) / float(self.ticks * self.opts.delay))
+                iowait_pct = float(delta) / float(self.ticks * self.opts.delay)
 
                 if (iowait_pct < 0) or (iowait_pct > 100):
                     #
@@ -435,9 +513,9 @@ class Main(object):
                     #
                     # For iowait, what are the ranges?
                     #
-                    if process_last_stats.iowait_min_pct == None:
+                    if process_last_stats.iowait_min_pct is None:
                         process_last_stats.iowait_min_pct = iowait_pct
-                    if process_last_stats.iowait_max_pct == None:
+                    if process_last_stats.iowait_max_pct is None:
                         process_last_stats.iowait_max_pct = iowait_pct
 
                     min_iowait_pct = process_last_stats.iowait_min_pct
@@ -464,7 +542,9 @@ class Main(object):
                 process_curr_stats.did_something = process_last_stats.did_something
                 if not self.opts.all:
                     if (cpu_pct == 0) and (iowait_pct == 0):
-                        process_curr_stats.did_something = process_curr_stats.did_something - 1
+                        process_curr_stats.did_something = (
+                            process_curr_stats.did_something - 1
+                        )
                         if process_curr_stats.did_something <= 0:
                             process_curr_stats.did_something = 0
                             continue
@@ -478,106 +558,180 @@ class Main(object):
             if not self.opts.no_color:
                 sys.stdout.write("%s" % (colors.fg.blue))
 
-            print(("%-5s    " % (process_last_stats.pid)), end=' ')
+            print(("%-5s    " % (process_last_stats.pid)), end=" ")
             curr_stats.pids_and_tids.append(process_last_stats.pid)
 
             #
             # If showing all pids then highlight the first pid to start with
             #
             if self.all_pids:
-                if self.opts.pid == None:
+                if self.opts.pid is None:
                     self.opts.pid = pid
 
             if not self.opts.no_color:
                 if process_last_stats.state == "D":
-                    sys.stdout.write("%s%s%s " % (colors.fg.red, process_last_stats.state, colors.reset))
+                    sys.stdout.write(
+                        "%s%s%s "
+                        % (colors.fg.red, process_last_stats.state, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%s%s " % (colors.fg.green, process_last_stats.state, colors.reset))
+                    sys.stdout.write(
+                        "%s%s%s "
+                        % (colors.fg.green, process_last_stats.state, colors.reset)
+                    )
             else:
                 sys.stdout.write("%s " % (process_last_stats.state))
 
             name = last_stats.get_process_name(process_last_stats.pid)
-            if name == None or name == "":
+            if name is None or name == "":
                 name = process_last_stats.name
-                if name == None or name == "":
+                if name is None or name == "":
                     continue
 
             name = name[:21]
 
             if not self.opts.no_color:
                 if self.opts.pid == pid:
-                    sys.stdout.write("%s%-22s%s " % (colors.bg.purple, name, colors.reset))
+                    sys.stdout.write(
+                        "%s%-22s%s " % (colors.bg.purple, name, colors.reset)
+                    )
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s" % (name)), end=' ')
+                    print(("%-22s" % (name)), end=" ")
             else:
                 if self.opts.pid == pid:
-                    sys.stdout.write("%s%-22s%s " % (colors.reverse, name, colors.reset))
+                    sys.stdout.write(
+                        "%s%-22s%s " % (colors.reverse, name, colors.reset)
+                    )
                     self.found_user_selected_process = True
                 else:
-                    print(("%-22s" % (name)), end=' ')
+                    print(("%-22s" % (name)), end=" ")
 
             if not self.opts.no_color:
                 if utime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (utime))
 
             if not self.opts.no_color:
                 if stime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (stime))
 
             if not self.opts.no_color:
                 if cpu_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, cpu_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s" % (colors.fg.red, cpu_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, cpu_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s" % (colors.fg.green, cpu_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (cpu_pct))
 
             if not self.opts.no_color:
                 if process_curr_stats.cpu_min_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, process_curr_stats.cpu_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.red, process_curr_stats.cpu_min_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, process_curr_stats.cpu_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            process_curr_stats.cpu_min_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (process_curr_stats.cpu_min_pct))
 
             if not self.opts.no_color:
                 if process_curr_stats.cpu_max_pct > 90:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.red, process_curr_stats.cpu_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (colors.fg.red, process_curr_stats.cpu_max_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%9.02f%%%s" % (colors.fg.green, process_curr_stats.cpu_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%9.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            process_curr_stats.cpu_max_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%9.02f%%" % (process_curr_stats.cpu_max_pct))
 
             if not self.opts.no_color:
                 if iowait_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, iowait_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, iowait_pct, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, iowait_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, iowait_pct, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (iowait_pct))
 
             if not self.opts.no_color:
                 if process_curr_stats.iowait_min_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, process_curr_stats.iowait_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.red,
+                            process_curr_stats.iowait_min_pct,
+                            colors.reset,
+                        )
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, process_curr_stats.iowait_min_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            process_curr_stats.iowait_min_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (process_curr_stats.iowait_min_pct))
 
             if not self.opts.no_color:
                 if process_curr_stats.iowait_max_pct > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, process_curr_stats.iowait_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.red,
+                            process_curr_stats.iowait_max_pct,
+                            colors.reset,
+                        )
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, process_curr_stats.iowait_max_pct, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s"
+                        % (
+                            colors.fg.green,
+                            process_curr_stats.iowait_max_pct,
+                            colors.reset,
+                        )
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (process_curr_stats.iowait_max_pct))
 
@@ -659,7 +813,7 @@ class Main(object):
             #
             c1.did_something = c0.did_something
             if not self.opts.all:
-                if (total_clock == 0):
+                if total_clock == 0:
                     c1.did_something = c1.did_something - 1
                     if c1.did_something <= 0:
                         c1.did_something = 0
@@ -670,49 +824,73 @@ class Main(object):
 
             if not self.opts.no_color:
                 if utime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, utime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, utime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (utime))
 
             if not self.opts.no_color:
                 if stime > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, stime, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, stime, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (stime))
 
             if not self.opts.no_color:
                 if idle > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, idle, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, idle, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, idle, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, idle, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (idle))
 
             if not self.opts.no_color:
                 if iowait > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, iowait, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, iowait, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, iowait, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, iowait, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (iowait))
 
             if not self.opts.no_color:
                 if ireq > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, ireq, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, ireq, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, ireq, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, ireq, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (ireq))
 
             if not self.opts.no_color:
                 if softirq > 90:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.red, softirq, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.red, softirq, colors.reset)
+                    )
                 else:
-                    sys.stdout.write("%s%8.02f%%%s" % (colors.fg.green, softirq, colors.reset))
+                    sys.stdout.write(
+                        "%s%8.02f%%%s" % (colors.fg.green, softirq, colors.reset)
+                    )
             else:
                 sys.stdout.write("%8.02f%%" % (softirq))
 
@@ -781,7 +959,11 @@ class Main(object):
         else:
             sys.stdout.write("%s" % (colors.reverse))
 
-        print("vvv Maximum CPU seen for pid %d, %.2f%%" % (pid, float(self.cpu_hist_max[pid])), end=' ')
+        print(
+            "vvv Maximum CPU seen for pid %d, %.2f%%"
+            % (pid, float(self.cpu_hist_max[pid])),
+            end=" ",
+        )
 
         sys.stdout.write("%s:" % (colors.reset))
         print()
@@ -802,11 +984,11 @@ class Main(object):
 
             for x in range(start, end):
                 if r <= 0:
-                    s += '?'
+                    s += "?"
                     continue
 
-                if self.cpu_history[pid][x] == None:
-                    s += '?'
+                if self.cpu_history[pid][x] is None:
+                    s += "?"
                     continue
 
                 v = (float(self.cpu_history[pid][x]) - low_cpu_percent_seen) / r
@@ -824,7 +1006,10 @@ class Main(object):
                     else:
                         s += "%s%s%s" % (colors.reverse, "#", colors.reset)
 
-            percent_axis = "%03.02f%%" % (low_cpu_percent_seen + float(histogram_lines - row) * (r / histogram_lines))
+            percent_axis = "%03.02f%%" % (
+                low_cpu_percent_seen
+                + float(histogram_lines - row) * (r / histogram_lines)
+            )
 
             print(("%7s %s" % (percent_axis, s)))
 
@@ -833,11 +1018,17 @@ class Main(object):
         else:
             sys.stdout.write("%s" % (colors.reverse))
 
-        print("^^^ Minimum CPU seen for pid %d, %.2f%%" % (pid, float(self.cpu_hist_min[pid])), end=' ')
+        print(
+            "^^^ Minimum CPU seen for pid %d, %.2f%%"
+            % (pid, float(self.cpu_hist_min[pid])),
+            end=" ",
+        )
 
         sys.stdout.write("%s" % (colors.reset))
 
-        print(": pytop, yet another top: use j,k,up/down to select processes, q to quit")
+        print(
+            ": pytop, yet another top: use j,k,up/down to select processes, q to quit"
+        )
 
     #
     # Handle user input
@@ -852,7 +1043,7 @@ class Main(object):
                 pid = int(pid)
 
                 if self.opts.pid == pid:
-                    if last != None:
+                    if last is not None:
                         self.opts.pid = last
                     return
 
@@ -883,26 +1074,43 @@ class Main(object):
         #
         # Arguments
         #
-        arger.add_argument("-p", "--pid", type=int,
-                help="filter to a given pid")
+        arger.add_argument("-p", "--pid", type=int, help="filter to a given pid")
 
-        arger.add_argument("-one", "--one", action="count", default=0,
-                help="one shot and then exit, like top -b")
+        arger.add_argument(
+            "-one",
+            "--one",
+            action="count",
+            default=0,
+            help="one shot and then exit, like top -b",
+        )
 
-        arger.add_argument("-i", "--ignore", type=int, default=3,
-                help="filter idle processes after x seconds of inaction")
+        arger.add_argument(
+            "-i",
+            "--ignore",
+            type=int,
+            default=3,
+            help="filter idle processes after x seconds of inaction",
+        )
 
-        arger.add_argument("-d", "--delay", type=float, default=1,
-                help="delay between system samples")
+        arger.add_argument(
+            "-d", "--delay", type=float, default=1, help="delay between system samples"
+        )
 
-        arger.add_argument("-a", "--all", action="count", default=0,
-                help="include all processes, including idle ones")
+        arger.add_argument(
+            "-a",
+            "--all",
+            action="count",
+            default=0,
+            help="include all processes, including idle ones",
+        )
 
-        arger.add_argument("-c", "--no-color", action="count", default=0,
-                help="disable color output")
+        arger.add_argument(
+            "-c", "--no-color", action="count", default=0, help="disable color output"
+        )
 
-        arger.add_argument("-H", "--no-histogram", action="count", default=0,
-                help="disable histogram")
+        arger.add_argument(
+            "-H", "--no-histogram", action="count", default=0, help="disable histogram"
+        )
 
         #
         # Parse
@@ -912,16 +1120,16 @@ class Main(object):
         #
         # Screen size
         #
-        self.lines, self.columns = os.popen('stty size', 'r').read().split()
+        self.lines, self.columns = os.popen("stty size", "r").read().split()
         self.lines = int(self.lines) - 3
         self.columns = int(self.columns)
-        if self.lines == None:
+        if self.lines is None:
             self.lines = -1
 
         #
         # Linux clock tick; 100 usually
         #
-        self.ticks = os.sysconf((os.sysconf_names['SC_CLK_TCK']))
+        self.ticks = os.sysconf((os.sysconf_names["SC_CLK_TCK"]))
 
         self.cpu_history = {}
         self.cpu_switch_history = {}
@@ -955,7 +1163,7 @@ class Main(object):
         while True:
             time.sleep(self.opts.delay)
             curr_stats = SystemSnapshot(self.opts.pid)
-            os.system('clear')
+            os.system("clear")
 
             self.display_cpu_delta(last_stats, curr_stats)
             self.display_process_delta(last_stats, curr_stats)
@@ -970,6 +1178,7 @@ class Main(object):
             last_stats = curr_stats
             self.handle_user_input(last_stats)
 
+
 class Thread(object):
     def __init__(self, pid, thread, stat):
 
@@ -980,12 +1189,12 @@ class Thread(object):
         # Get rid of spaces in process names
         #
         while True:
-            new = re.sub(r'\((.*) (.*)\)', r'(\1_\2)', stat)
+            new = re.sub(r"\((.*) (.*)\)", r"(\1_\2)", stat)
             if new == stat:
-                break;
+                break
             stat = new
 
-        sp = stat.split(' ')
+        sp = stat.split(" ")
         self.pid = sp[0]
         self.name = sp[1]
         self.state = sp[2]
@@ -1028,7 +1237,7 @@ class Thread(object):
         self.rt_priority = int(sp[39])
         self.policy = int(sp[40])
 
-        if (len(sp) > 42):
+        if len(sp) > 42:
             self.blkio_ticks = int(sp[42])
         else:
             self.blkio_ticks = -1
@@ -1043,22 +1252,30 @@ class Thread(object):
 
         self.did_something = 0
 
+
 #
 # Parse /proc/stat output for 1 CPU
 #
 class CpuSnapshot(object):
     def __init__(self, pid, stat):
 
-        self.utime = int(stat.split(' ')[1])
-        self.nice = int(stat.split(' ')[2])
-        self.stime = int(stat.split(' ')[3])
-        self.idle = int(stat.split(' ')[4])
-        self.iowait = int(stat.split(' ')[5])
-        self.ireq = int(stat.split(' ')[6])
-        self.softirq = int(stat.split(' ')[7])
+        self.utime = int(stat.split(" ")[1])
+        self.nice = int(stat.split(" ")[2])
+        self.stime = int(stat.split(" ")[3])
+        self.idle = int(stat.split(" ")[4])
+        self.iowait = int(stat.split(" ")[5])
+        self.ireq = int(stat.split(" ")[6])
+        self.softirq = int(stat.split(" ")[7])
 
-        self.clock = self.utime + self.nice + self.stime + \
-            self.idle + self.iowait + self.ireq + self.softirq
+        self.clock = (
+            self.utime
+            + self.nice
+            + self.stime
+            + self.idle
+            + self.iowait
+            + self.ireq
+            + self.softirq
+        )
         self.did_something = 0
 
 
@@ -1070,12 +1287,12 @@ class GetPidShapshot(object):
         #
         self.debug = stat
         while True:
-            new = re.sub(r'\((.*) (.*)\)', r'(\1_\2)', stat)
+            new = re.sub(r"\((.*) (.*)\)", r"(\1_\2)", stat)
             if new == stat:
-                break;
+                break
             stat = new
 
-        sp = stat.split(' ')
+        sp = stat.split(" ")
         self.pid = sp[0]
         self.name = sp[1]
         self.state = sp[2]
@@ -1118,7 +1335,7 @@ class GetPidShapshot(object):
         self.rt_priority = int(sp[39])
         self.policy = int(sp[40])
 
-        if (len(sp) > 42):
+        if len(sp) > 42:
             self.blkio_ticks = int(sp[42])
         else:
             self.blkio_ticks = -1
@@ -1136,20 +1353,19 @@ class GetPidShapshot(object):
         self.threads = []
 
         try:
-            self.threads = \
-                [thread for thread in
-                    os.listdir(
-                        os.path.join('/proc/', pid, 'task')) \
-                            if thread.isdigit()]
+            self.threads = [
+                thread
+                for thread in os.listdir(os.path.join("/proc/", pid, "task"))
+                if thread.isdigit()
+            ]
 
             self.tstats = {}
             for thread in self.threads:
-                with open( \
-                    os.path.join('/proc/', pid, 'task', thread, 'stat' )) \
-                        as pidfile:
+                with open(
+                    os.path.join("/proc/", pid, "task", thread, "stat")
+                ) as pidfile:
 
-                    self.tstats[int(thread)] = \
-                        Thread(pid, thread, pidfile.readline())
+                    self.tstats[int(thread)] = Thread(pid, thread, pidfile.readline())
 
         except Exception:
             pass
@@ -1169,7 +1385,7 @@ class SystemSnapshot(object):
             self.cpuinfo = {}
             cpu = 0
 
-            with open(os.path.join('/proc/stat'), 'r') as cpufile:
+            with open(os.path.join("/proc/stat"), "r") as cpufile:
                 for line in cpufile.readlines():
                     if not line.startswith("cpu"):
                         continue
@@ -1190,7 +1406,7 @@ class SystemSnapshot(object):
     # Process names have some garbage at the end; remove it.
     #
     def process_name_filter(self, str):
-        ret=""
+        ret = ""
         for c in str:
             if ord(c) > 31 or ord(c) == 9:
                 ret += c
@@ -1203,7 +1419,7 @@ class SystemSnapshot(object):
     #
     def get_process_name(self, pid):
         try:
-            with open(os.path.join('/proc/', pid, 'cmdline'), 'r') as pidfile:
+            with open(os.path.join("/proc/", pid, "cmdline"), "r") as pidfile:
                 return self.process_name_filter(pidfile.readline())
 
         except Exception:
@@ -1215,7 +1431,7 @@ class SystemSnapshot(object):
     #
     def get_process_info(self, pid):
         try:
-            with open(os.path.join('/proc/', pid, 'stat'), 'r') as pidfile:
+            with open(os.path.join("/proc/", pid, "stat"), "r") as pidfile:
                 self.pstats[int(pid)] = GetPidShapshot(pid, pidfile.readline())
 
         except Exception:
@@ -1226,12 +1442,13 @@ class SystemSnapshot(object):
     # Filter to a given pid or all pids.
     #
     def get_processes_snapshot(self, pid=None):
-        self.pids = [pid for pid in os.listdir('/proc') if pid.isdigit()]
+        self.pids = [pid for pid in os.listdir("/proc") if pid.isdigit()]
 
         self.pids_and_tids = []
         self.pstats = {}
         for pid in self.pids:
             self.get_process_info(pid)
+
 
 #
 # Taken from
@@ -1239,38 +1456,41 @@ class SystemSnapshot(object):
 # http://stackoverflow.com/users/4157799/gi-jack
 #
 class colors:
-    reset='\033[0m'
-    bold='\033[01m'
-    disable='\033[02m'
-    underline='\033[04m'
-    reverse='\033[07m'
-    strikethrough='\033[09m'
-    invisible='\033[08m'
+    reset = "\033[0m"
+    bold = "\033[01m"
+    disable = "\033[02m"
+    underline = "\033[04m"
+    reverse = "\033[07m"
+    strikethrough = "\033[09m"
+    invisible = "\033[08m"
+
     class fg:
-        black='\033[30m'
-        red='\033[31m'
-        green='\033[32m'
-        orange='\033[33m'
-        blue='\033[34m'
-        purple='\033[35m'
-        cyan='\033[36m'
-        white='\033[37m'
-        darkgrey='\033[90m'
-        lightred='\033[91m'
-        lightgreen='\033[92m'
-        yellow='\033[93m'
-        lightblue='\033[94m'
-        pink='\033[95m'
-        lightcyan='\033[96m'
+        black = "\033[30m"
+        red = "\033[31m"
+        green = "\033[32m"
+        orange = "\033[33m"
+        blue = "\033[34m"
+        purple = "\033[35m"
+        cyan = "\033[36m"
+        white = "\033[37m"
+        darkgrey = "\033[90m"
+        lightred = "\033[91m"
+        lightgreen = "\033[92m"
+        yellow = "\033[93m"
+        lightblue = "\033[94m"
+        pink = "\033[95m"
+        lightcyan = "\033[96m"
+
     class bg:
-        black='\033[40m'
-        red='\033[41m'
-        green='\033[42m'
-        orange='\033[43m'
-        blue='\033[44m'
-        purple='\033[45m'
-        cyan='\033[46m'
-        white='\033[47m'
+        black = "\033[40m"
+        red = "\033[41m"
+        green = "\033[42m"
+        orange = "\033[43m"
+        blue = "\033[44m"
+        purple = "\033[45m"
+        cyan = "\033[46m"
+        white = "\033[47m"
+
 
 #
 # Read raw data from the console, so we can understand cursor keys.
@@ -1283,44 +1503,45 @@ def curses_read_raw(delay):
     try:
         tty.setraw(sys.stdin.fileno())
 
-        i, o, e = select.select( [sys.stdin], [], [], delay)
+        i, o, e = select.select([sys.stdin], [], [], delay)
 
-        if (i):
+        if i:
             ch = sys.stdin.read(1)
-            if ch == '\x1b':
+            if ch == "\x1b":
                 ch += sys.stdin.read(2)
     finally:
         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
 
     return ch
 
+
 #
 # Map keyboard strings to an event.
 #
 def curses_get_ch(delay):
     inkey = curses_read_raw(delay)
-    if inkey == None:
+    if inkey is None:
         return
 
-    if inkey == 'q':
+    if inkey == "q":
         return "quit"
-    elif inkey == 'j':
+    elif inkey == "j":
         return "down"
-    elif inkey == 'k':
+    elif inkey == "k":
         return "up"
-    elif inkey == '\x1b[A':
+    elif inkey == "\x1b[A":
         return "up"
-    elif inkey == '\x1b[B':
+    elif inkey == "\x1b[B":
         return "down"
-    elif inkey == '\x1b[C':
+    elif inkey == "\x1b[C":
         return "right"
-    elif inkey == '\x1b[D':
+    elif inkey == "\x1b[D":
         return "left"
     else:
         return
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Main().main()
 
 exit(0)
